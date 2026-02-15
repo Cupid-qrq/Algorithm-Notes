@@ -2,20 +2,10 @@
 
 This repository contains notes and code solutions for algorithms I have tackled on Luogu and LeetCode. The repo aims to record my learning and thinking process, and to systematically organize the algorithms I have studied.
 
-## Directory Structure
+## Repository Structure
 
-Algorithm-Notes/
-|
-├── README.md
-├── .gitignore
-|
-├── Algorithm Templates/
-|
-├── Luogu
-|
-├── LeetCode
-| 
-|
-├── To be continued...
-
-
+- [Readme.md](README.md)
+- [Code](Code/)
+    - [Luogu](Code/Luogu/)
+    - [Leetcode](Code/Leetcode/)
+- [Notes](Notes/)
