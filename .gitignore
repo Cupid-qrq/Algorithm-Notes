@@ -1,0 +1,5 @@
+*.exe
+*.out
+*.0
+*.log   
+.vscode/ # Ignore Visual Studio Code settings folder
