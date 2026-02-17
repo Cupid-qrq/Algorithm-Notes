@@ -5,7 +5,14 @@ This repository contains notes and code solutions for algorithms I have tackled 
 ## Repository Structure
 
 - [Readme.md](README.md)
-- [Code](Code/)
-    - [Luogu](Code/Luogu/)
-    - [Leetcode](Code/Leetcode/)
+- [Algorithm Categories](Code/)
+    - [Dynamic Programming](Code/DP/)
+    - [Graph Algorithms](Code/Graph/)
+    - [Sorting Algorithms](Code/Sorting/)
+    - [Greedy Algorithms](Code/Greedy/)
+    - [Other Algorithms](Code/Other/)
+- [Sort by Theme](Themes/)
+     - [CCF-CSP](Themes/CCF-CSP/)
+     - [Lanqiao](Themes/Lanqiao/)
+     - [Winter Vacation Training](Themes/Winter-Vacation-Training/)
 - [Notes](Notes/)
