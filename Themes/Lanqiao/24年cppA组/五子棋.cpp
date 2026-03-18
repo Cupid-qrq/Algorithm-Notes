@@ -1,56 +1,66 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int b[5][5]; // 0=空, 1=白, 2=黑
+int b[5][5]; // 1=白, 2=黑
 long long ans = 0;
 
-// 检查是否有五连子（赢棋）
-bool hasWin() {
-  // 检查行
-  for (int i = 0; i < 5; i++) {
-    if (b[i][0] != 0 && b[i][0] == b[i][1] && b[i][1] == b[i][2] &&
-        b[i][2] == b[i][3] && b[i][3] == b[i][4])
+// 在按行优先顺序填到pos后，检查刚完成的行/列/对角线是否五连
+bool checkWinAfter(int pos) {
+  int x = pos / 5, y = pos % 5;
+
+  // 当一行填完（y==4）时检查该行
+  if (y == 4) {
+    if (b[x][0] == b[x][1] && b[x][1] == b[x][2] && b[x][2] == b[x][3] &&
+        b[x][3] == b[x][4])
       return true;
   }
-  // 检查列
-  for (int j = 0; j < 5; j++) {
-    if (b[0][j] != 0 && b[0][j] == b[1][j] && b[1][j] == b[2][j] &&
-        b[2][j] == b[3][j] && b[3][j] == b[4][j])
+
+  // 当一列填完（x==4）时检查该列
+  if (x == 4) {
+    if (b[0][y] == b[1][y] && b[1][y] == b[2][y] && b[2][y] == b[3][y] &&
+        b[3][y] == b[4][y])
       return true;
   }
-  // 检查主对角线
-  if (b[0][0] != 0 && b[0][0] == b[1][1] && b[1][1] == b[2][2] &&
-      b[2][2] == b[3][3] && b[3][3] == b[4][4])
-    return true;
-  // 检查副对角线
-  if (b[0][4] != 0 && b[0][4] == b[1][3] && b[1][3] == b[2][2] &&
-      b[2][2] == b[3][1] && b[3][1] == b[4][0])
-    return true;
+
+  // 主对角线在(4,4)填完时检查
+  if (x == 4 && y == 4) {
+    if (b[0][0] == b[1][1] && b[1][1] == b[2][2] && b[2][2] == b[3][3] &&
+        b[3][3] == b[4][4])
+      return true;
+  }
+
+  // 副对角线在(4,0)填完时检查
+  if (x == 4 && y == 0) {
+    if (b[0][4] == b[1][3] && b[1][3] == b[2][2] && b[2][2] == b[3][1] &&
+        b[3][1] == b[4][0])
+      return true;
+  }
+
   return false;
 }
 
-// 按位置顺序填充棋盘（避免重复计数）
-void dfs(int pos, int black_cnt, int white_cnt) {
+// 逐格放棋子，枚举所有C(25,13)种摆法，剪枝掉有五连的
+void dfs(int pos, int wcnt, int bcnt) {
   if (pos == 25) {
-    // 棋盘填满：黑13个，白12个（黑先手）
-    if (black_cnt == 13 && white_cnt == 12 && !hasWin()) {
-      ans++;
-    }
+    ans++;
     return;
   }
 
   int x = pos / 5, y = pos % 5;
 
-  // 尝试放黑子（黑先手，黑数 == 白数时放黑）
-  if (black_cnt == white_cnt && black_cnt < 13) {
-    b[x][y] = 2;
-    dfs(pos + 1, black_cnt + 1, white_cnt);
+  // 尝试放白子
+  if (wcnt < 13) {
+    b[x][y] = 1;
+    if (!checkWinAfter(pos))
+      dfs(pos + 1, wcnt + 1, bcnt);
     b[x][y] = 0;
   }
-  // 尝试放白子（黑比白多1时放白）
-  if (black_cnt == white_cnt + 1 && white_cnt < 12) {
-    b[x][y] = 1;
-    dfs(pos + 1, black_cnt, white_cnt + 1);
+
+  // 尝试放黑子
+  if (bcnt < 12) {
+    b[x][y] = 2;
+    if (!checkWinAfter(pos))
+      dfs(pos + 1, wcnt, bcnt + 1);
     b[x][y] = 0;
   }
 }
