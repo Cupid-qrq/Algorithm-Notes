@@ -1,18 +1,77 @@
-# *Algorithm-Notes*
+# Algorithm Notes
 
-This repository contains notes and code solutions for algorithms I have tackled on Luogu and LeetCode. The repo aims to record my learning and thinking process, and to systematically organize the algorithms I have studied.
+Personal algorithm notebook for practice, review, and accumulation.
+
+This repository records my learning path with C++ solutions, mainly from Luogu, CCF-CSP, and Lanqiao training sets.
+
+---
+
+## Contents
+
+- [Algorithm Notes](#algorithm-notes)
+  - [Contents](#contents)
+  - [Overview](#overview)
+  - [Repository Structure](#repository-structure)
+  - [Categories](#categories)
+  - [Themes](#themes)
+  - [Conventions](#conventions)
+
+## Overview
+
+| Area   | Description                           | Link              |
+| ------ | ------------------------------------- | ----------------- |
+| Code   | Organized by algorithm category       | [Code](Code/)     |
+| Themes | Organized by contest/training source  | [Themes](Themes/) |
+| Notes  | Personal notes and drafts             | [Notes](Notes/)   |
+| Output | Compiled binaries and generated files | [output](output/) |
 
 ## Repository Structure
 
-- [Readme.md](README.md)
-- [Algorithm Categories](Code/)
-    - [Dynamic Programming](Code/DP/)
-    - [Graph Algorithms](Code/Graph/)
-    - [Sorting Algorithms](Code/Sorting/)
-    - [Greedy Algorithms](Code/Greedy/)
-    - [Other Algorithms](Code/Other/)
-- [Sort by Theme](Themes/)
-     - [CCF-CSP](Themes/CCF-CSP/)
-     - [Lanqiao](Themes/Lanqiao/)
-     - [Winter Vacation Training](Themes/Winter-Vacation-Training/)
-- [Notes](Notes/)
+```text
+Algorithm-Notes/
+|-- Code/
+|   |-- DP/
+|   |-- Graph/
+|   |   |-- BFS/
+|   |   |-- DSU/
+|   |   |-- other/
+|   |   |-- 搜索/
+|   |   |-- 最短路/
+|   |   `-- 网络流/
+|   |-- Greedy/
+|   |-- Other/
+|   `-- Sorting/
+|-- Themes/
+|   |-- CCF-CSP/
+|   |-- Lanqiao/
+|   `-- Winter-Vacation-Training/
+|-- Notes/
+|-- output/
+`-- README.md
+```
+
+## Categories
+
+- [Dynamic Programming](Code/DP/)
+- [Graph Algorithms](Code/Graph/)
+    - [BFS](Code/Graph/BFS/)
+    - [DSU](Code/Graph/DSU/)
+    - [Search](Code/Graph/搜索/)
+    - [Shortest Path](Code/Graph/最短路/)
+    - [Network Flow](Code/Graph/网络流/)
+    - [Other Graph Topics](Code/Graph/other/)
+- [Greedy](Code/Greedy/)
+- [Sorting](Code/Sorting/)
+- [Other](Code/Other/)
+
+## Themes
+
+- [CCF-CSP](Themes/CCF-CSP/)
+- [Lanqiao](Themes/Lanqiao/)
+- [Winter Vacation Training](Themes/Winter-Vacation-Training/)
+
+## Conventions
+
+- Problem file names generally follow original platform titles.
+- Some folders contain output subfolders for local executable results.
+- This repo focuses on long-term learning records and solution accumulation.
