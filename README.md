@@ -34,10 +34,10 @@ Algorithm-Notes/
 |   |-- Graph/
 |   |   |-- BFS/
 |   |   |-- DSU/
+|   |   |-- NetworkFlow/
 |   |   |-- other/
-|   |   |-- 搜索/
-|   |   |-- 最短路/
-|   |   `-- 网络流/
+|   |   |-- Searching/
+|   |   `-- ShortestPath/
 |   |-- Greedy/
 |   |-- Other/
 |   `-- Sorting/
@@ -54,12 +54,12 @@ Algorithm-Notes/
 
 - [Dynamic Programming](Code/DP/)
 - [Graph Algorithms](Code/Graph/)
-    - [BFS](Code/Graph/BFS/)
-    - [DSU](Code/Graph/DSU/)
-    - [Search](Code/Graph/搜索/)
-    - [Shortest Path](Code/Graph/最短路/)
-    - [Network Flow](Code/Graph/网络流/)
-    - [Other Graph Topics](Code/Graph/other/)
+  - [BFS](Code/Graph/BFS/)
+  - [DSU](Code/Graph/DSU/)
+  - [Search](Code/Graph/Searching/)
+  - [Shortest Path](Code/Graph/ShortestPath/)
+  - [Network Flow](Code/Graph/NetworkFlow/)
+  - [Other Graph Topics](Code/Graph/other/)
 - [Greedy](Code/Greedy/)
 - [Sorting](Code/Sorting/)
 - [Other](Code/Other/)
@@ -75,3 +75,4 @@ Algorithm-Notes/
 - Problem file names generally follow original platform titles.
 - Some folders contain output subfolders for local executable results.
 - This repo focuses on long-term learning records and solution accumulation.
+- `Notes/` currently includes multiple template versions, including `Algorithm-template-v3.md` and its printable PDF.
