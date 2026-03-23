@@ -831,7 +831,39 @@ vector<int> mulBig(const string& s1,const string& s2){
 }
 ```
 
----
+### 5.9 ST 表
+
+```cpp
+// 预处理 O(nlogn)，查询 O(1)，用于区间最大，最小，gcd 
+const int N = 100005;
+int n, m;
+int a[N];
+int st[N][20];
+int lg[N];
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    // 预处理 log
+    lg[1] = 0;
+    for (int i = 2; i <= n; i++) lg[i] = lg[i / 2] + 1;
+    // 初始化长度为 1 的区间
+    for (int i = 1; i <= n; i++)  st[i][0] = a[i];
+    // 预处理 ST 表   
+    for (int j = 1; j <= lg[n]; j++) { 
+        for (int i = 1; i + (1 << j) - 1 <= n; i++) {
+            st[i][j] = min(st[i][j - 1],
+                           st[i + (1 << (j - 1))][j - 1]);
+        }
+    }
+    while (m--) {// 查询
+        int l, r; cin >> l >> r;
+        int k = lg[r - l + 1];
+        int ans = min(st[l][k],st[r - (1 << k) + 1][k]);
+        cout << ans << '\n';
+    }
+}
+```
 
 ## 6. 字符串算法
 
