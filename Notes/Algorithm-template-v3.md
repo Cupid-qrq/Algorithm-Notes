@@ -993,12 +993,103 @@ auto it2=upper_bound(a.begin(),a.end(),x); // >x
 
 ---
 
-## 9. 使用建议（比赛现场）
+## 9. 赛场 WSL+VSCode 环境配置
 
-1. 先判断模型：图/DP/数据结构/数学。  
-2. 有负边先排除 Dijkstra；有环先排除 DAG DP。  
-3. 复杂图题优先画 5~8 个点手图再写代码。  
-4. 模板复制后先改变量含义，再改边界与 `long long`。  
-5. Debug 顺序：建图是否反了 -> 下标是否越界 -> 初始化是否正确。
+### 9.1 快速安装
 
+#### WSL 安装（管理员 PowerShell）
+```powershell
+wsl --install -d Ubuntu
+# 首次启动会提示输入用户名和密码
+```
+
+#### GCC 安装
+```bash
+wsl
+sudo apt update && sudo apt install -y build-essential gdb
+g++ --version  # 验证
+```
+
+#### 扩展安装（VSCode）
+按 `Ctrl + Shift + X`，安装：`Remote - WSL`, `C/C++`, `Code Runner`
+
+---
+
+### 9.2 连接 VSCode
+
+1. `Ctrl + Shift + P` → `Remote-WSL: New WSL Window`
+2. 打开项目文件夹：`Ctrl + K Ctrl + O` → `/home/username/...`
+3. 验证终端显示 `user@hostname:~$`
+
+---
+
+### 9.3 配置编译和调试
+
+在项目根目录创建 `.vscode/tasks.json`：
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "C++: Build with g++ (WSL)",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++20", "-Wall", "-Wextra", "-g",
+        "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}.out"
+      ],
+      "group": {"kind": "build", "isDefault": true},
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1, "line": 2, "column": 3, "severity": 4, "message": 5
+        }
+      }
+    }
+  ]
+}
+```
+
+创建 `.vscode/launch.json`：
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug C++ (WSL)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/${fileBasenameNoExtension}.out",
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "C++: Build with g++ (WSL)"
+    }
+  ]
+}
+```
+
+---
+
+### 9.4 快速参考
+
+| 操作 | 快捷键             |
+| ---- | ------------------ |
+| 编译 | `Ctrl + Shift + B` |
+| 运行 | `Ctrl + Alt + N`   |
+| 调试 | `F5`               |
+| 终端 | `` Ctrl + ` ``     |
+| 错误 | `Ctrl + Shift + M` |
+
+**常见问题**
+- G++ 找不到：`sudo apt install -y build-essential`
+- WSL 连不上：重启 VSCode 或重新启用虚拟机平台（控制面板 → Windows 功能）
+- Permission denied：文件移到 home 目录或 `/tmp`
+
+---
 
