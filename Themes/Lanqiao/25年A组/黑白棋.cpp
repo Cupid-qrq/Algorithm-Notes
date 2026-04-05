@@ -1,81 +1,163 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 const int N = 6;
-int g[N][N];
-vector<bool> init(40, 0);
 
-void initial() {
-  // 1 is black, 2 is white
-  g[0][0] = 1;
-  g[0][1] = 2;
-  g[0][3] = 2;
-  g[1][3] = 2;
-  g[2][4] = 2;
-  g[2][5] = 2;
-  g[4][2] = 1;
-  g[4][5] = 1;
-  g[5][1] = 2;
-  g[5][4] = 1;
-  init[1] = init[2] = init[4] = init[10] = init[17] = init[18] = init[27] =
-      init[30] = init[32] = init[35] = 1;
+// fixedBoard[i][j] = 0 表示未知，1 表示黑，2 表示白。
+int fixedBoard[N][N];
+int board[N][N];
+
+struct Row {
+  int a[N];
+};
+
+vector<Row> validRows;
+vector<Row> choices[N];
+
+bool rowOk(const Row &row) {
+  int black = 0;
+  for (int i = 0; i < N; i++) {
+    if (row.a[i] == 1)
+      black++;
+  }
+  if (black != 3)
+    return false;
+
+  for (int i = 0; i + 2 < N; i++) {
+    if (row.a[i] == row.a[i + 1] && row.a[i + 1] == row.a[i + 2])
+      return false;
+  }
+  return true;
 }
 
-bool safe(int &x, int &y) { return x >= 0 && x < 6 && y >= 0 && y < 6; }
+bool matchFixed(int r, const Row &row) {
+  for (int c = 0; c < N; c++) {
+    if (fixedBoard[r][c] != 0 && fixedBoard[r][c] != row.a[c])
+      return false;
+  }
+  return true;
+}
 
-bool check() { return true; }
+bool checkBoard() {
+  // 行：题目要求每行黑白各 3 个，且不能出现连续三个同色。
+  for (int r = 0; r < N; r++) {
+    int black = 0;
+    for (int c = 0; c < N; c++) {
+      black += (board[r][c] == 1);
+    }
+    if (black != 3)
+      return false;
+    for (int c = 0; c + 2 < N; c++) {
+      if (board[r][c] == board[r][c + 1] && board[r][c + 1] == board[r][c + 2])
+        return false;
+    }
+  }
 
-void dfs(int pos, int cor) {
-  if (init[pos] == 1)
-    return;
-  if (pos == 37) {
-    if (check()) {
-      for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 6; j++) {
-          cout << g[i][j] << " ";
+  // 列：同样要求黑白各 3 个，且不能出现连续三个同色。
+  for (int c = 0; c < N; c++) {
+    int black = 0;
+    for (int r = 0; r < N; r++) {
+      black += (board[r][c] == 1);
+    }
+    if (black != 3)
+      return false;
+    for (int r = 0; r + 2 < N; r++) {
+      if (board[r][c] == board[r + 1][c] && board[r + 1][c] == board[r + 2][c])
+        return false;
+    }
+  }
+
+  // 任意两行、任意两列都不能完全一样。
+  for (int r1 = 0; r1 < N; r1++) {
+    for (int r2 = r1 + 1; r2 < N; r2++) {
+      bool same = true;
+      for (int c = 0; c < N; c++) {
+        if (board[r1][c] != board[r2][c]) {
+          same = false;
+          break;
         }
-        cout << '\n';
+      }
+      if (same)
+        return false;
+    }
+  }
+
+  for (int c1 = 0; c1 < N; c1++) {
+    for (int c2 = c1 + 1; c2 < N; c2++) {
+      bool same = true;
+      for (int r = 0; r < N; r++) {
+        if (board[r][c1] != board[r][c2]) {
+          same = false;
+          break;
+        }
+      }
+      if (same)
+        return false;
+    }
+  }
+
+  return true;
+}
+
+void dfs(int r) {
+  if (r == N) {
+    if (!checkBoard())
+      return;
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        if (board[i][j] == 2)
+          cout << 0;
+        else
+          cout << board[i][j];
       }
     }
-    return;
+    exit(0);
   }
 
-  int x = pos / 6, y = (pos % 6) - 1;
-  if (!safe(x, y))
-    return;
-
-  g[x][y] = cor;
-  if (x >= 2) {
-    if (g[x][y] == g[x - 1][y] && g[x][y] == g[x - 2][y]) {
-      g[x][y] = 0;
-      return;
+  for (const auto &row : choices[r]) {
+    for (int c = 0; c < N; c++) {
+      board[r][c] = row.a[c];
     }
+    dfs(r + 1);
   }
-  if (y >= 2) {
-    if (g[x][y] == g[x][y - 1] && g[x][y] == g[x][y - 2]) {
-      g[x][y] = 0;
-      return;
-    }
-  }
-
-  dfs(pos + 1, 1);
-  dfs(pos + 1, 2);
-  g[x][y] = 0;
 }
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
-//   initial();
+  // 题目给定的初始棋盘。
+  fixedBoard[0][0] = 1;
+  fixedBoard[0][1] = 2;
+  fixedBoard[0][3] = 2;
+  fixedBoard[1][3] = 2;
+  fixedBoard[2][4] = 2;
+  fixedBoard[2][5] = 2;
+  fixedBoard[4][2] = 1;
+  fixedBoard[4][5] = 1;
+  fixedBoard[5][1] = 2;
+  fixedBoard[5][4] = 1;
 
-//   for (int i = 0; i < 6; i++) {
-//     for (int j = 0; j < 6; j++) {
-//       int pos = i * 6 + j + 1;
-//       dfs(pos, 1);
-//       dfs(pos, 2);
-//     }
-//   }
-  cout << "101001010011101100010110011001100110";
+  // 先枚举所有 6 格的行状态，只保留合法行。
+  for (int mask = 0; mask < (1 << N); mask++) {
+    Row row{};
+    for (int i = 0; i < N; i++) {
+      row.a[i] = (mask & (1 << i)) ? 1 : 2;
+    }
+    if (rowOk(row))
+      validRows.push_back(row);
+  }
+
+  // 每一行只保留和初始盘面匹配的候选。
+  for (int r = 0; r < N; r++) {
+    for (const auto &row : validRows) {
+      if (matchFixed(r, row))
+        choices[r].push_back(row);
+    }
+  }
+
+  // 直接按行枚举，最后统一检查整盘是否合法。
+  dfs(0);
   return 0;
 }

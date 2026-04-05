@@ -6,6 +6,7 @@ unordered_map<int, int> freq;
 set<pair<int, int>> memo;
 vector<int> nums;
 long long ans;
+long long base = 1;
 const int mod = 1000000007;
 
 vector<long long> fact, invfact;
@@ -46,6 +47,11 @@ int main() {
     freq[nums[i]]++;
   }
 
+  // 所有频率对应的 invfact 先统一乘一遍，后面每个候选只做常数修正。
+  for (auto [num, f] : freq) {
+    base = base * invfact[f] % mod;
+  }
+
   // 枚举 n
   for (int i = 0; i < t; i++) {
     n = nums[i];
@@ -67,17 +73,11 @@ int main() {
     if (n != m && (freq[n] < 1 || freq[m] < 1))
       continue;
 
-    long long curans = fact[n * m];
-
-    // 乘上 invfact（等价于除以 factorial）
-    for (auto [num, f] : freq) {
-      if (num == n && num == m) {
-        curans = curans * invfact[f - 2] % mod;
-      } else if (num == n || num == m) {
-        curans = curans * invfact[f - 1] % mod;
-      } else {
-        curans = curans * invfact[f] % mod;
-      }
+    long long curans = fact[n * m] * base % mod;
+    if (n == m) {
+      curans = curans * freq[n] % mod * (freq[n] - 1) % mod;
+    } else {
+      curans = curans * freq[n] % mod * freq[m] % mod;
     }
 
     ans = (ans + curans) % mod;

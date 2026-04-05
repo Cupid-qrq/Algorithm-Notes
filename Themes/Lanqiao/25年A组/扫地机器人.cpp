@@ -12,7 +12,9 @@ vector<bool> vis, incylce;
 
 // dp[u]：以 u 为端点，向其非环子树延伸能取得的最大链和（包含 u）。
 vector<ll> dp;
-ll ans_tree = 0;
+// best_through[u]：仅在非环子树内，经过 u 连接两条向下链的最优值（包含 u）。
+vector<ll> best_through;
+ll ans_tree = LLONG_MIN;
 
 bool get_cycle(int cur, int f) {
   // 在无向图 DFS 中，遇到已访问且不是父节点的点即可回溯出环。
@@ -51,7 +53,9 @@ void dfs(int u, int father) {
     }
     dp[u] = max(dp[u], w[u] + dp[v]);
   }
-  ans_tree = max(ans_tree, max1 + max2 + w[u]);
+  best_through[u] = w[u] + max1 + max2;
+  ans_tree = max(ans_tree, dp[u]);
+  ans_tree = max(ans_tree, best_through[u]);
 }
 
 ll solve_cycle() {
@@ -104,6 +108,7 @@ int main() {
   vis.assign(n + 1, false);
   incylce.assign(n + 1, false);
   dp.assign(n + 1, 0);
+  best_through.assign(n + 1, 0);
 
   for (int i = 1; i <= n; i++)
     cin >> w[i];
@@ -126,7 +131,19 @@ int main() {
   // 3) 在环上合并各环点贡献。
   ll ans_cycle = solve_cycle();
 
+  // 4) 特判：可以完整走一圈环，然后在同一个环点接入挂树（最多两条链）。
+  // 这一类路径不被 solve_cycle 的 "j-i<=k-1" 覆盖。
+  ll sum_cycle = 0;
+  ll extra = 0;
+  for (int node : cycle) {
+    sum_cycle += w[node];
+    // best_through[node] 已包含
+    // w[node]，环和里也包含一次，故减去一次避免重复计数。
+    extra = max(extra, best_through[node] - w[node]);
+  }
+  ll ans_full_cycle = sum_cycle + extra;
+
   // 最终答案：树内最优 与 环上合并最优 二者取大。
-  cout << max(ans_tree, ans_cycle);
+  cout << max(max(ans_tree, ans_cycle), ans_full_cycle);
   return 0;
 }
